@@ -1,7 +1,7 @@
 # SSI Verification Kernel v1.1 — R³-refined Code Ocean Reproducibility Capsule
 
 **PURE WAD¹⁸** executable reference for the Safe Super Intelligence specification family by Michael Aaron Russell:
-
+***ZONODO: DOI https://doi.org/10.5281/zenodo.23103333***
 - **Specification I:** *Safe Super Intelligence: Definition, Architecture, and Verification Standard v1.0*
 - **Specification II:** *Safe Super Intelligence Axiomatic System v1.0*
 
