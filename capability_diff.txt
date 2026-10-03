@@ -1,0 +1,11 @@
+R3 capability disclosure: behavioural difference between parent v1.0 and child v1.1
+parent table lines            : 12430
+child table lines             : 13058  (appended: 628)
+parent lines changed          : 163
+  WAD div: ERR OVERFLOW -> ERR NON_EXACT: 78
+  WAD mul: ERR OVERFLOW -> ERR NON_EXACT: 18
+  WAD mul: ERR OVERFLOW -> OK: 67
+non-WAD lines changed (gate, permit, decision, CSL, directive, capability, ...): 0
+WAD lines changed outside the widened class                                    : 0
+oracle (pure Python): 1034 WAD/WADX lines checked, 0 disagreements
+observed capability bits: 15
