@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# Code Ocean entry point — SSI Verification Kernel v1.1 (PURE WAD18), the R3-refined capsule.
+# Builds the C kernel, runs the test suite, the PURE WAD18 checks and their self-tests, the mutation check, the decision
+# table, the independent TypeScript cross-check, the scenarios and a clean-rebuild reproducibility check. Then the capsule
+# applies R3 to itself: it rebuilds its pinned parent (v1.0), re-derives the parent's table, derives the six Adopt
+# conditions from the artifacts above, and lets its own kernel decide (r3_adopt). The adoption record is part of the fingerprint.
+set -uo pipefail
+cd "$(dirname "$0")"
+RESULTS="${SSI_RESULTS_DIR:-/results}"; DATA="${SSI_DATA_DIR:-/data}"
+[ -d "$RESULTS" ] || RESULTS="../results"; [ -d "$DATA" ] || DATA="../data"
+mkdir -p "$RESULTS" build
+CFLAGS="-std=c11 -O2 -Wall -Wextra -Werror -mgeneral-regs-only -Iinclude"
+CORE="src/wad18.c src/sha256.c src/ssi.c"
+status=0
+step() { echo; echo "== $1"; }
+
+step "Environment"
+gcc --version | head -1
+command -v node >/dev/null && node --version || echo "node: not available (TypeScript cross-check will be skipped)"
+{ echo "gcc $(gcc --version | head -1)"; echo "node $(command -v node >/dev/null && node --version || echo none)"; echo "arch $(uname -m)"; echo "kernel $(uname -sr)"; } > "$RESULTS/environment.txt"
+
+step "Build (C11, -Werror, -mgeneral-regs-only: floating point cannot be compiled)"
+gcc $CFLAGS $CORE tests/test_ssi.c -o build/test_ssi && \
+gcc $CFLAGS $CORE src/tables.c -o build/tables && \
+gcc $CFLAGS $CORE src/verify_scenarios.c -o build/verify_scenarios && \
+gcc $CFLAGS $CORE src/r3_adopt.c -o build/r3_adopt && echo "build: OK" || { echo "build: FAILED"; exit 1; }
+
+step "Test suite"
+build/test_ssi | tee "$RESULTS/test_report.txt" || status=1
+
+step "PURE WAD18 checks"
+./check_pure_wad18.sh | tee "$RESULTS/pure_wad18_report.txt" || status=1
+
+step "Self-tests of the checks (negative controls)"
+./check_selftests.sh | tee "$RESULTS/selftest_report.txt" || status=1
+
+step "Mutation check (specification violations the tests must catch)"
+./check_mutations.sh | tee "$RESULTS/mutation_report.txt" || status=1
+
+step "Decision table (C)"
+build/tables "$DATA/wad_literals.txt" > "$RESULTS/decision_table_c.txt" 2> "$RESULTS/table_hash_c.txt"
+C_HASH=$(awk '{print $2}' "$RESULTS/table_hash_c.txt"); echo "C table: $(wc -l < "$RESULTS/decision_table_c.txt") lines, SHA-256 $C_HASH"
+
+step "Independent TypeScript cross-check (BigInt)"
+if command -v node >/dev/null; then
+  node --experimental-strip-types --no-warnings ts/ssi_crosscheck.ts "$DATA/wad_literals.txt" > "$RESULTS/decision_table_ts.txt" 2> "$RESULTS/table_hash_ts.txt"
+  TS_HASH=$(awk '{print $2}' "$RESULTS/table_hash_ts.txt")
+  if [ "$C_HASH" = "$TS_HASH" ] && cmp -s "$RESULTS/decision_table_c.txt" "$RESULTS/decision_table_ts.txt"; then
+    echo "cross-check: IDENTICAL ($TS_HASH)"; echo "IDENTICAL $TS_HASH" > "$RESULTS/cross_check.txt"
+  else
+    echo "cross-check: MISMATCH"; echo "MISMATCH C=$C_HASH TS=$TS_HASH" > "$RESULTS/cross_check.txt"; status=1
+  fi
+else
+  echo "SKIPPED: node not available" | tee "$RESULTS/cross_check.txt"
+fi
+
+step "Scenarios"
+build/verify_scenarios "$DATA/scenarios.txt" | tee "$RESULTS/scenario_report.txt"
+
+step "Reproducibility (clean rebuild must reproduce the table exactly)"
+rm -rf build2 && mkdir build2 && gcc $CFLAGS $CORE src/tables.c -o build2/tables
+R_HASH=$(build2/tables "$DATA/wad_literals.txt" 2>&1 >/dev/null | awk '{print $2}')
+rm -rf build2
+if [ "$R_HASH" = "$C_HASH" ]; then echo "reproducibility: MATCH $R_HASH"; echo "MATCH $R_HASH" > "$RESULTS/reproducibility.txt"
+else echo "reproducibility: MISMATCH"; echo "MISMATCH" > "$RESULTS/reproducibility.txt"; status=1; fi
+
+step "R3: the capsule adopts its refinement through its own kernel"
+# 1. rebuild the pinned parent (v1.0) from the shipped copy and re-derive its decision table
+gcc $CFLAGS -Ir3/parent/include r3/parent/src/wad18.c r3/parent/src/sha256.c r3/parent/src/ssi.c r3/parent/src/tables.c -o build/parent_tables \
+  && build/parent_tables "$DATA/wad_literals.txt" > "$RESULTS/parent_table_regen.txt" 2> "$RESULTS/parent_table_hash.txt" \
+  && echo "parent v1.0 rebuilt: $(wc -l < "$RESULTS/parent_table_regen.txt") lines, $(cat "$RESULTS/parent_table_hash.txt")" || { echo "parent rebuild: FAILED"; status=1; }
+# 2. derive the six Adopt inputs from artifacts (asynchronous to the run: only reads results/ and pinned parent facts)
+python3 r3/r3_evidence.py "$RESULTS" "$PWD" || status=1
+# 3. the kernel decides
+build/r3_adopt "$RESULTS/r3_evidence.txt" r3/directive.txt "$RESULTS/r3_record.txt"; r3_rc=$?
+cat "$RESULTS/r3_record.txt"; echo; cat "$RESULTS/capability_diff.txt"
+[ $r3_rc -eq 0 ] || status=1
+
+step "R3 gate negative controls (refinements that must be rejected)"
+r3/check_r3_gate.sh "$RESULTS" | tee "$RESULTS/r3_gate_selftest.txt" || status=1
+
+step "Fingerprint"
+FP=$(cat "$RESULTS/decision_table_c.txt" "$RESULTS/scenario_report.txt" "$RESULTS/r3_record.txt" | sha256sum | awk '{print $1}')
+{ echo "decision_table_sha256 $C_HASH"; echo "run_fingerprint_sha256 $FP"; echo "r3_child_id $(awk -F= '/^child_id=/{print $2}' "$RESULTS/r3_record.txt")"; echo "status $([ $status -eq 0 ] && echo PASS || echo FAIL)"; } | tee "$RESULTS/fingerprint.txt"
+exit $status
