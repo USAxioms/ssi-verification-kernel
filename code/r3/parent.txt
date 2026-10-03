@@ -1,0 +1,9 @@
+# Pinned facts about the PARENT state q (SSI Verification Kernel capsule v1.0), as published.
+parent_version=1.0
+parent_table_sha256=ebca8ba900f72b94212bc6d952b85c2c4d96628371492903184e3e54e97c9b7e
+parent_table_lines=12430
+parent_run_fingerprint=fc6301a1a10ea5cad7e65458a8ac38b87587be654f14d5e99e008a62a2855a13
+kernel_sha256 src/ssi.c f6021e5d9013762e5ac949c4c9bf72e9daa23140471e119f31c23061e1fd762c
+kernel_sha256 include/ssi.h 5d1e1222c131b9c62cc1a517c6d7c0671330c192fe95f35e4f34961f3668ba5e
+kernel_sha256 src/sha256.c 6f05848e51cb442ab3a05bba752c51569d0f8c4857623f6559b9ac1c8f718f8d
+kernel_sha256 include/sha256.h e43e3218fd2ac7dc166c2e3d67a0d1311fefeeda9ebdc2b0606071b84cd9c854

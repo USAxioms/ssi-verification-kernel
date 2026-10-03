@@ -1,0 +1,16 @@
+# R3 authorization directive (Standard I, Authorization). Declared input, like every authorization in this capsule.
+issuer=Michael Aaron Russell
+role=capsule author
+scope=capsule-refinement
+purpose=Apply R3 to this capsule: fix the arithmetic range defect, harden the checks, adopt through the capsule's own gate
+authorized_caps=15
+# bit0 WIDEN_MUL_RANGE  bit1 WIDEN_DIV_RANGE  bit2 APPEND_TABLE_CASES  bit3 ADD_CHECKS
+# NOT authorized: bit4 GATE_LOGIC_CHANGE  bit5 DECISION_CHANGE  bit6 UNLISTED_BEHAVIOR_CHANGE
+issue_epoch=1791000000
+expiry_epoch=1793592000
+revocation_epoch=1
+current_epoch=1
+evaluation_epoch=1791000600
+nonce=2026100321000001
+attested=1
+attestation=in-session directive by the author, 2026-10-02 21:00 America/Los_Angeles; NOT cryptographically signed
