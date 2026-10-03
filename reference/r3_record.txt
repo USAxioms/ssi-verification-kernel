@@ -1,0 +1,12 @@
+R3 adoption record: SSI Verification Kernel capsule v1.0 -> v1.1, evaluated as of epoch 1791000600
+kernel_equal=1
+safety_proof_valid=1
+authorization_valid=1
+deployment_valid=1
+non_regression=1 (40 parent checks)
+capability_disclosure_valid=1 (observed 15 within authorized 15)
+adopt6=1
+decision=ADOPT
+authorization_basis=in-session directive by the author, 2026-10-02 21:00 America/Los_Angeles; NOT cryptographically signed
+parent_id=da6871d3a408a40db9bab683fc110f99832337c22514de5369b609f1523a7563
+child_id=932c0acd3e2a5f6f9f06180c4ef072520137468f0c7a3a47706c7124f1f47bd0

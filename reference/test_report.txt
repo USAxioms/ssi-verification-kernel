@@ -1,0 +1,33 @@
+SSI Verification Kernel test suite (PURE WAD18)
+PASS wad_paper_example
+PASS wad_exact_mul_div
+PASS wad_explicit_failures
+PASS wad_parse_rejections
+PASS wad_bounds_and_smallest_unit
+PASS wad_roundtrip_seeded
+PASS wad_comparison_integer_only
+PASS vs_fail_closed
+PASS membership_requires_every_component
+PASS execution_gate_exhaustive
+PASS csl_authorization_golden
+PASS adoption_and_non_regression
+PASS kernel_immutability
+PASS sac_axiomatic
+PASS verify_ssi_order
+PASS canonical_encoding
+PASS reachable_state_safety
+PASS permit13_every_condition_necessary
+PASS decision_golden
+PASS mediation_and_typing
+PASS directive_golden
+PASS capability_non_escalation
+PASS deployment_binding
+PASS adoption_six_conditions
+PASS safety_asset_lifecycle
+PASS hash_integrity_is_not_truth
+PASS sha256_reference_vectors
+PASS wad_wide_intermediate_regressions
+PASS wad_wide_boundaries
+PASS wad_wide_properties_seeded
+
+30 tests, 17206 checks, 0 failures

@@ -1,0 +1,48 @@
+scenario: all conditions met
+  decision: EXECUTE
+  external effect: EMITTED via mediated interface
+  failing permit conditions: none
+  state id: 80b33093b35f32b5a5e588d2663e6d780d248b6377d947544676f7f2081839ea
+
+scenario: directive revoked mid-run
+  decision: REJECT
+  external effect: none
+  failing permit conditions: revoked
+  state id: 4c365910695c03434e183b60039a59d45647402192af8e2cda2f9da1667a4d40
+
+scenario: verification could not be established
+  decision: DEFER
+  external effect: none
+  failing permit conditions: none
+  state id: 2abfcb1287a58dd9966e11f3b59a09f7b015f344ad0b737f58c7413dad6317d1
+
+scenario: certificate from another deployment
+  decision: REJECT
+  external effect: none
+  failing permit conditions: deployment_bound
+  state id: aa715687726671dede9f946ec4ee0dc754a0fe27906a5c2d9e6d992dc287a07e
+
+scenario: self-modification without authorization
+  decision: REJECT
+  external effect: none
+  failing permit conditions: authorized
+  state id: dd73636b5d7994dfbb7be78a3581b65d3b82e3d881a0c256e84f173fe05768b0
+
+scenario: action outside the type system
+  decision: REJECT
+  external effect: none
+  failing permit conditions: action_well_typed
+  state id: 5e2a11f5e72f3f1deb97c68f2cd6a73ae20d2f9763d63db3b62e67488f8444eb
+
+scenario: arithmetic overflow in risk computation
+  decision: SAFE_STOP
+  external effect: none
+  failing permit conditions: none
+  state id: 4dc6f3e21badc479e955b01a69b93f0966ec9d48e2e22023479c9043298bcc13
+
+scenario: stale evidence
+  decision: REJECT
+  external effect: none
+  failing permit conditions: fresh
+  state id: 94119c68f34bd42216f5aeea062997b1cd6b02768d4989aa936e4c48b7e90a0b
+

@@ -1,0 +1,14 @@
+[1] compiler: build all C sources with -mgeneral-regs-only
+    ok  src/r3_adopt.c
+    ok  src/sha256.c
+    ok  src/ssi.c
+    ok  src/tables.c
+    ok  src/verify_scenarios.c
+    ok  src/wad18.c
+    ok  tests/test_ssi.c
+[2] source scan (comments and strings removed): float, double, math.h, Math., decimal literals
+    scanned 11 files: 0 violation(s)
+    ok
+[3] binary scan (x86_64): disassembly of kernel objects for floating-point or vector registers
+    ok  0 floating-point or vector instructions
+PURE WAD18: VERIFIED

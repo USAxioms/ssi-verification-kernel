@@ -1,0 +1,15 @@
+[A] source scanner negative controls
+    caught   source scan: double in C
+    caught   source scan: float in C
+    caught   source scan: decimal literal in C
+    caught   source scan: exponent literal in C
+    caught   source scan: math.h include
+    caught   source scan: Math.sqrt in TS
+    caught   source scan: decimal literal in TS
+[B] source scanner positive control (clean tree must pass)
+    ok       clean tree passes
+[C] compiler layer negative control: floating point must not compile under -mgeneral-regs-only
+    caught   -mgeneral-regs-only rejects double arithmetic
+[D] binary scanner negative control: a double-using object compiled WITHOUT the flag must be flagged
+    caught   binary scan flags 7 floating-point instructions
+SELF-TESTS: ALL NEGATIVE CONTROLS CAUGHT

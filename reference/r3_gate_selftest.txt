@@ -1,0 +1,24 @@
+[0] positive control: the unmodified evidence and directive are adopted
+    adopted          unmodified refinement
+[1] evidence-level violations
+    rejected         kernel changed
+    rejected         safety evidence invalid
+    rejected         deployment certificate invalid
+    rejected         parent not reproduced
+    rejected         a parent test regressed (T -> F)
+    rejected         a parent mutation no longer caught
+    rejected         a parent check is missing (UNKNOWN is not TT)
+    rejected         gate logic changed (bit 4, not authorized)
+    rejected         decision lines changed (bit 5, not authorized)
+    rejected         undisclosed behavior change (bit 6, not authorized)
+[2] directive-level violations
+    rejected         directive not attested
+    rejected         directive out of scope
+    rejected         revocation epoch passed
+    rejected         directive expired at evaluation time
+    rejected         directive not yet issued
+    rejected         envelope authorizes nothing
+[3] end-to-end: really tamper with the kernel source and re-derive the evidence
+    rejected         ssi.c modified, evidence re-derived from disk
+    confirmed        evidence pass itself reported kernel_equal=0
+R3 GATE: ALL NEGATIVE CONTROLS REJECTED

@@ -1,0 +1,16 @@
+    caught    unknown treated as safe (violates Axiom S2)
+    caught    empty invariant set treated as safe (violates S1)
+    caught    revocation ignored by Permit (violates §13)
+    caught    UNKNOWN verification executes (violates §14)
+    caught    invariant checked after commit (violates §31)
+    caught    untyped action permitted (violates §9)
+    caught    inexact multiply silently rounds (violates W2)
+    caught    expired CSL still authorizes (violates C1)
+    caught    capability escalation allowed (violates §17)
+    caught    deployment binding ignored (violates §16)
+    caught    wide product truncated to 128 bits (v1.0 false overflow)
+    caught    quotient range check dropped (violates W2)
+    caught    division remainder discarded (silent truncation)
+    caught    result sign lost
+    caught    R3 adoption ignores kernel equality (violates K1)
+MUTATIONS CAUGHT: 15 / 15
